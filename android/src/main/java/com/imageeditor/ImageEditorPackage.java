@@ -1,4 +1,4 @@
-package com.imageeditor.imageeditor;
+package com.imageeditor;
 
 import java.util.Arrays;
 import java.util.Collections;

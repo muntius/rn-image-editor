@@ -1,0 +1,7 @@
+{
+  "name": "rn-image-editor",
+  "version": "0.8.0",
+  "description": "A React Native Image Cropper",
+  "main": "./lib"
+}
+  

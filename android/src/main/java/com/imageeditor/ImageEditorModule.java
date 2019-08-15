@@ -1,4 +1,4 @@
-package com.imageeditor.imageeditor;
+package com.imageeditor;
 
 import javax.annotation.Nullable;
 
@@ -31,6 +31,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import com.facebook.common.logging.FLog;
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.GuardedAsyncTask;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -40,6 +41,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.JSApplicationIllegalArgumentException;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.infer.annotation.Assertions;
+import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.common.ReactConstants;
 
 /**
@@ -190,6 +192,55 @@ public class ImageEditorModule extends ReactContextBaseJavaModule {
         (int) targetSize.getDouble("height"));
     }
     cropTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+  }
+
+  @ReactMethod
+  public void getSize(String uri, final Promise promise) {
+    try {
+      Uri u = Uri.parse(uri);
+      BitmapFactory.Options options = new BitmapFactory.Options();
+      options.inJustDecodeBounds = true;
+
+      int height = 0;
+      int width = 0;
+
+      if (uri.startsWith("file://")) {
+        BitmapFactory.decodeFile(u.getPath(), options);
+        int orientation= getOrientation(getReactApplicationContext(), u);
+        if(orientation == 90 || orientation == 270){
+          height = options.outWidth;
+          width = options.outHeight;
+        } else {
+          height = options.outHeight;
+          width = options.outWidth;
+        }
+
+      } else {
+        URL url = new URL(uri);
+        Bitmap bitmap = BitmapFactory.decodeStream((InputStream) url.getContent());
+        int orientation= getOrientation(getReactApplicationContext(), u);
+        if(orientation == 90 || orientation == 270){
+          height = bitmap.getWidth();
+          width = bitmap.getHeight();
+        } else {
+          height = bitmap.getHeight();
+          width = bitmap.getWidth();
+        }
+
+      }
+
+
+
+
+      WritableMap map = Arguments.createMap();
+
+      map.putInt("height", height);
+      map.putInt("width", width);
+
+      promise.resolve(map);
+    } catch (Exception e) {
+      promise.reject(e);
+    }
   }
 
   private static class CropTask extends GuardedAsyncTask<Void, Void> {
