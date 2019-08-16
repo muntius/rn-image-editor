@@ -6,7 +6,7 @@
 {
     BOOL res = [image writeToFile:path atomically:YES];
     if (res == NO) {
-        *error = [NSError errorWithDomain:@"org.imageeditor.imageeditor.writeToFileError" code:101 userInfo:[NSDictionary dictionary]];
+        *error = [NSError errorWithDomain:@"org.imageeditor.writeToFileError" code:101 userInfo:[NSDictionary dictionary]];
         return nil;
     }
     NSURL *fileURL = [NSURL fileURLWithPath:path];

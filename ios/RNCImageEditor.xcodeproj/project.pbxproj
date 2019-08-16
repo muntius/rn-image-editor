@@ -10,6 +10,7 @@
 		1478DE2B22A0403F00D818FA /* RNCFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1478DE2A22A0403F00D818FA /* RNCFileSystem.m */; };
 		1478DE2E22A044E500D818FA /* RNCImageUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1478DE2D22A044E500D818FA /* RNCImageUtils.m */; };
 		B3E7B58A1CC2AC0600A0062D /* RNCImageEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RNCImageEditor.m */; };
+		D2F0EE6523068C85001390A3 /* ImageHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = D2F0EE6323068C85001390A3 /* ImageHelpers.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,6 +33,8 @@
 		1478DE2F22A0450800D818FA /* RNCImageUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNCImageUtils.h; sourceTree = "<group>"; };
 		B3E7B5881CC2AC0600A0062D /* RNCImageEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNCImageEditor.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* RNCImageEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNCImageEditor.m; sourceTree = "<group>"; };
+		D2F0EE6323068C85001390A3 /* ImageHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageHelpers.m; sourceTree = "<group>"; };
+		D2F0EE6423068C85001390A3 /* ImageHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageHelpers.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +59,8 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				D2F0EE6423068C85001390A3 /* ImageHelpers.h */,
+				D2F0EE6323068C85001390A3 /* ImageHelpers.m */,
 				1478DE2A22A0403F00D818FA /* RNCFileSystem.m */,
 				1478DE2D22A044E500D818FA /* RNCImageUtils.m */,
 				1478DE2F22A0450800D818FA /* RNCImageUtils.h */,
@@ -105,6 +110,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 58B511D21A9E6C8500147676;
@@ -125,6 +131,7 @@
 				1478DE2E22A044E500D818FA /* RNCImageUtils.m in Sources */,
 				1478DE2B22A0403F00D818FA /* RNCFileSystem.m in Sources */,
 				B3E7B58A1CC2AC0600A0062D /* RNCImageEditor.m in Sources */,
+				D2F0EE6523068C85001390A3 /* ImageHelpers.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
