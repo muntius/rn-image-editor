@@ -82,7 +82,6 @@ RCT_EXPORT_METHOD(cropImage:(NSURLRequest *)imageRequest
 }
 
 RCT_EXPORT_METHOD(rotate:(NSString *)path
-                  format:(NSString *)format
                   quality:(float)quality
                   rotation:(float)rotation
                   outputPath:(NSString *)outputPath
@@ -93,14 +92,15 @@ RCT_EXPORT_METHOD(rotate:(NSString *)path
 //        CGSize newSize = CGSizeMake(width, height);
         //Set image extension
         NSString *extension = @"jpg";
-        if ([format isEqualToString:@"PNG"]) {
-            extension = @"png";
-        }
         NSString* fullPath;
         @try {
             fullPath = generateFilePath(extension, outputPath);
         } @catch (NSException *exception) {
-            resolve(@[@"Invalid output path.", @""]);
+            NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"failed generateFilePath" };
+            NSError *error = [NSError errorWithDomain:@"generateFilePath"
+                                                 code:-1
+                                             userInfo:userInfo];
+            reject(@"error", @"There were no events", error);
             return;
         }
         
@@ -113,7 +113,11 @@ RCT_EXPORT_METHOD(rotate:(NSString *)path
                     image = [[UIImage alloc] initWithContentsOfFile:path];
                 }
                 if (image == nil) {
-                    resolve(@[@"Can't retrieve the file from the path.", @""]);
+                    NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"failed loadImageWithURLRequest" };
+                    NSError *error = [NSError errorWithDomain:@"loadImageWithURLRequest"
+                                                         code:-1
+                                                     userInfo:userInfo];
+                    reject(@"error", @"There were no events", error);
                     return;
                 }
             }
@@ -122,7 +126,11 @@ RCT_EXPORT_METHOD(rotate:(NSString *)path
             if (0 != (int)rotation) {
                 image = rotateImage(image, rotation);
                 if (image == nil) {
-                    resolve(@[@"Can't rotate the image.", @""]);
+                    NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"failed Can't rotate the image" };
+                    NSError *error = [NSError errorWithDomain:@"rotateImage"
+                                                         code:-1
+                                                     userInfo:userInfo];
+                    reject(@"error", @"failed Can't rotate the image", error);
                     return;
                 }
             }
@@ -135,8 +143,12 @@ RCT_EXPORT_METHOD(rotate:(NSString *)path
 //            }
             
             // Compress and save the image
-            if (!saveImage(fullPath, image, format, quality)) {
-                resolve(@[@"Can't save the image. Check your compression format and your output path", @""]);
+            if (!saveImage(fullPath, image, extension, quality)) {
+                NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"failed saveImage" };
+                NSError *error = [NSError errorWithDomain:@"saveImage"
+                                                     code:-1
+                                                 userInfo:userInfo];
+                reject(@"error", @"failed Can't saveImage", error);
                 return;
             }
             NSURL *fileUrl = [[NSURL alloc] initFileURLWithPath:fullPath];
@@ -322,11 +334,7 @@ UIImage * rotateImage(UIImage *inputImage, float rotationDegrees)
 bool saveImage(NSString * fullPath, UIImage * image, NSString * format, float quality)
 {
     NSData* data = nil;
-    if ([format isEqualToString:@"JPEG"]) {
-        data = UIImageJPEGRepresentation(image, quality / 100.0);
-    } else if ([format isEqualToString:@"PNG"]) {
-        data = UIImagePNGRepresentation(image);
-    }
+    data = UIImageJPEGRepresentation(image, quality / 100.0);
     
     if (data == nil) {
         return NO;
