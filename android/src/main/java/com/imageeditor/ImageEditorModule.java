@@ -253,6 +253,18 @@ public class ImageEditorModule extends ReactContextBaseJavaModule {
     }
   }
 
+
+  @ReactMethod
+  public void getBase64(String uri, final Promise promise) {
+    try {
+      Bitmap bmp = BitmapFactory.decodeStream(new java.net.URL(uri).openStream());
+      String base64String = ImageUtil.convert(bmp);
+      promise.resolve(base64String);
+    } catch (Exception e) {
+      promise.reject(e);
+    }
+  }
+
   @ReactMethod
   public void rotate(String imagePath,int quality, int rotation, String outputPath, final Promise promise) {
     RotateTask rotateTask = new RotateTask(
