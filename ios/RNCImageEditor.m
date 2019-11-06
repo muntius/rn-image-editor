@@ -34,6 +34,19 @@ RCT_EXPORT_MODULE()
  *        be scaled down to `displaySize` rather than `size`.
  *        All units are in px (not points).
  */
+
+RCT_EXPORT_METHOD(getBase64:(NSString *)linkUrl
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
+{
+    NSURL *url = [NSURL URLWithString:linkUrl];
+    NSData *imageData = [NSData dataWithContentsOfURL:url];
+    UIImage *image = [UIImage imageWithData:imageData];
+    NSString *strEncoded = encodeToBase64String(image);
+    resolve(strEncoded);
+}
+
+
 RCT_EXPORT_METHOD(cropImage:(NSURLRequest *)imageRequest
                   cropData:(NSDictionary *)cropData
                   resolve:(RCTPromiseResolveBlock)resolve
@@ -342,6 +355,10 @@ bool saveImage(NSString * fullPath, UIImage * image, NSString * format, float qu
     
     NSFileManager* fileManager = [NSFileManager defaultManager];
     return [fileManager createFileAtPath:fullPath contents:data attributes:nil];
+}
+
+NSString * encodeToBase64String(UIImage * image) {
+    return [UIImagePNGRepresentation(image) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
 }
 
 
