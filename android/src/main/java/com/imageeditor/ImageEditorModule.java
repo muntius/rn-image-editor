@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -202,6 +203,13 @@ public class ImageEditorModule extends ReactContextBaseJavaModule {
         (int) targetSize.getDouble("height"));
     }
     cropTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+  }
+
+
+  @ReactMethod
+  public void hideSplashScreen(Promise promise) {
+    SplashScreen.hide(getCurrentActivity());
+
   }
 
   @ReactMethod
