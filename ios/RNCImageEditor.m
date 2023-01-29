@@ -39,12 +39,22 @@ RCT_EXPORT_METHOD(getBase64:(NSString *)linkUrl
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
-    NSURL *url = [NSURL URLWithString:linkUrl];
-    NSData *imageData = [NSData dataWithContentsOfURL:url];
+    NSData *imageData;
+    if ([linkUrl hasPrefix:@"http"]) {
+        NSURL *url = [NSURL URLWithString:linkUrl];
+        imageData = [NSData dataWithContentsOfURL:url];
+    } else {
+        imageData = [NSData dataWithContentsOfFile:linkUrl];
+    }
+    if (!imageData) {
+        reject(@"Error", @"Invalid URL or URI provided", nil);
+        return;
+    }
     UIImage *image = [UIImage imageWithData:imageData];
     NSString *strEncoded = encodeToBase64String(image);
     resolve(strEncoded);
 }
+
 
 
 RCT_EXPORT_METHOD(cropImage:(NSURLRequest *)imageRequest
