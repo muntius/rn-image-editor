@@ -232,8 +232,27 @@ public class ImageEditorModule extends ReactContextBaseJavaModule {
           height = options.outHeight;
           width = options.outWidth;
         }
+      } else if (uri.startsWith("content://")) {
+		  try {
+			  InputStream inputStream = getReactApplicationContext().getContentResolver().openInputStream(u);
+			  BitmapFactory.decodeStream(inputStream, null, options);
+			  if (inputStream != null) {
+				  inputStream.close();
+			  }
 
-      } else {
+			  int orientation = getOrientation(getReactApplicationContext(), u);
+			  if (orientation == 90 || orientation == 270) {
+				  height = options.outWidth;
+				  width = options.outHeight;
+			  } else {
+				  height = options.outHeight;
+				  width = options.outWidth;
+			  }
+		  } catch (IOException e) {
+			  e.printStackTrace();
+			  // Handle error
+		  }
+	  } else {
         URL url = new URL(uri);
         Bitmap bitmap = BitmapFactory.decodeStream((InputStream) url.getContent());
         int orientation= getOrientation(getReactApplicationContext(), u);
@@ -244,11 +263,7 @@ public class ImageEditorModule extends ReactContextBaseJavaModule {
           height = bitmap.getHeight();
           width = bitmap.getWidth();
         }
-
       }
-
-
-
 
       WritableMap map = Arguments.createMap();
 
@@ -283,13 +298,6 @@ public class ImageEditorModule extends ReactContextBaseJavaModule {
             outputPath,
             promise);
     rotateTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-//    try {
-//      createResizedImageWithExceptions(imagePath, compressFormat, quality,
-//              rotation, outputPath, promise);
-//    } catch (IOException e) {
-//      promise.resolve(e.getMessage());
-//    }
   }
 
   private static class CropTask extends GuardedAsyncTask<Void, Void> {
